@@ -8,7 +8,7 @@ COPY packages/shared ./packages/shared
 COPY apps/backend ./apps/backend
 
 # Instalar dependencias y construir shared + backend
-RUN npm install -g pnpm && pnpm install --frozen-lockfile || pnpm install
+RUN npm install -g pnpm@9 && pnpm install --no-frozen-lockfile
 RUN pnpm --filter @sistema-ti/shared build
 RUN pnpm --filter backend prisma:generate
 RUN pnpm --filter backend build
@@ -30,7 +30,7 @@ COPY --from=builder /app/apps/backend/prisma ./apps/backend/prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
-RUN npm install -g pnpm && pnpm install --prod
+RUN npm install -g pnpm@9 && pnpm install --prod --no-frozen-lockfile
 
 EXPOSE 4000
 
