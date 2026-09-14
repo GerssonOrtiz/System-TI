@@ -19,12 +19,12 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package.json pnpm-workspace.yaml ./
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/shared/dist ./packages/shared/dist
-COPY apps/backend/package.json ./apps/backend/
-COPY apps/backend/dist ./apps/backend/dist
-COPY apps/backend/prisma ./apps/backend/prisma
+COPY --from=builder /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=builder /app/apps/backend/package.json ./apps/backend/
+COPY --from=builder /app/apps/backend/dist ./apps/backend/dist
+COPY --from=builder /app/apps/backend/prisma ./apps/backend/prisma
 
 # Copiar cliente de Prisma generado en el builder
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma

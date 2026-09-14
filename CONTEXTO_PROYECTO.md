@@ -84,10 +84,10 @@ Para un uso simple con volumen bajo/medio sin ningún tipo de cobro, la combinac
 ### Paso 2: Backend API REST Gratuito en Render.com o Koyeb
 1. Regístrate gratis en **[Render.com](https://render.com)**.
 2. Crea un **New Web Service** conectando tu repositorio de GitHub.
-3. Configuración:
-   - **Root Directory:** `apps/backend`
-   - **Build Command:** `npm run build` (o `pnpm build`)
-   - **Start Command:** `npm start` (`node dist/server.js`)
+3. Configuración para despliegue con **Docker** (Recomendado):
+   - **Environment:** `Docker`
+   - **Root Directory:** *(Dejar en blanco o `.` para usar la raíz del Monorepo)*
+   - **Dockerfile Path:** `apps/backend/Dockerfile`
    - **Environment Variables:**
      - `DATABASE_URL`: *(La URL copiada de Neon.tech)*
      - `NODE_ENV`: `production`
