@@ -1,5 +1,9 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
+
+# INSTALAR OPENSSL EN EL BUILDER
+RUN apk add --no-cache openssl libc6-compat
+
 WORKDIR /app
 
 # Copiar configuración de monorepo y paquetes
@@ -15,6 +19,10 @@ RUN pnpm --filter backend build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
+
+# INSTALAR OPENSSL EN EL RUNNER DE PRODUCCIÓN (OBLIGATORIO)
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -26,5 +34,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-# MODIFICACIÓN AQUÍ: Aplica migraciones antes de iniciar la app
+# Ejecuta migraciones e inicia la aplicación
 CMD ["sh", "-c", "npx prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
