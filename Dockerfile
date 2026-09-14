@@ -30,5 +30,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-# Usar el binario directo de Prisma en node_modules para no depender de pnpm/npx en producción
-CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
+# Ejecutar las migraciones llamando al CLI de Prisma mediante node directamente
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
