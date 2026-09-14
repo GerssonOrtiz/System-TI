@@ -1,17 +1,14 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
-# 1. Instalar OpenSSL en la etapa de construcción
 RUN apk add --no-cache openssl libc6-compat
 
 WORKDIR /app
 
-# Copiar configuración de monorepo y paquetes
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages/shared ./packages/shared
 COPY apps/backend ./apps/backend
 
-# Instalar dependencias y construir shared + backend
 RUN npm install -g pnpm@9 && pnpm install --no-frozen-lockfile
 RUN pnpm --filter @sistema-ti/shared build
 RUN pnpm --filter backend prisma:generate
@@ -20,7 +17,6 @@ RUN pnpm --filter backend build
 # Stage 2: Production
 FROM node:20-alpine AS runner
 
-# 2. Instalar OpenSSL en la etapa de ejecución (OBLIGATORIO para Alpine)
 RUN apk add --no-cache openssl
 
 WORKDIR /app
@@ -34,5 +30,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-# 3. Ejecutar migraciones de la base de datos antes de iniciar el servidor
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
+# Usar el binario local de prisma mediante pnpm para evitar que npx descargue Prisma v7
+CMD ["sh", "-c", "pnpm --filter backend exec prisma migrate deploy --schema=prisma/schema.prisma && node apps/backend/dist/server.js"]
