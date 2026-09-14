@@ -20,11 +20,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages/shared ./packages/shared
 COPY --from=builder /app/apps/backend ./apps/backend
-
-RUN npm install -g pnpm@9 && pnpm install --prod --no-frozen-lockfile
-RUN cd apps/backend && npx prisma generate
 
 EXPOSE 4000
 
