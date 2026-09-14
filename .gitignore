@@ -35,3 +35,12 @@ apps/backend/prisma/migrations/*.sql
 
 # Docker
 *.override.yml
+
+# Artefactos de compilación que no deben quedar en src/
+packages/shared/src/**/*.js
+packages/shared/src/**/*.js.map
+packages/shared/src/**/*.d.ts
+packages/shared/src/**/*.d.ts.map
+
+# Vercel
+.vercel
