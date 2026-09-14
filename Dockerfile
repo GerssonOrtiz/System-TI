@@ -1,5 +1,9 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
+
+# 1. Instalar OpenSSL en la etapa de construcción
+RUN apk add --no-cache openssl libc6-compat
+
 WORKDIR /app
 
 # Copiar configuración de monorepo y paquetes
@@ -15,6 +19,10 @@ RUN pnpm --filter backend build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
+
+# 2. Instalar OpenSSL en la etapa de ejecución (OBLIGATORIO para Alpine)
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -26,4 +34,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-CMD ["node", "apps/backend/dist/server.js"]
+# 3. Ejecutar migraciones de la base de datos antes de iniciar el servidor
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
