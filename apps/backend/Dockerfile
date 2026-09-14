@@ -26,4 +26,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-CMD ["node", "apps/backend/dist/server.js"]
+# MODIFICACIÓN AQUÍ: Aplica migraciones antes de iniciar la app
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
