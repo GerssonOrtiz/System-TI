@@ -12,7 +12,7 @@ import {
   UpdateTaskStatusSchema,
 } from './tasks.schema';
 
-export const tasksRouter = Router();
+export const tasksRouter: Router = Router();
 
 // Todos los endpoints de tareas requieren autenticación y rol ADMIN_TI
 tasksRouter.use(authenticate, authorize([Role.ADMIN_TI]));

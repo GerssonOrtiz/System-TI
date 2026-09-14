@@ -6,7 +6,7 @@ import { authenticate, authorize } from '../../middlewares/auth.middleware';
 
 import { usersController } from './users.controller';
 
-export const usersRouter = Router();
+export const usersRouter: Router = Router();
 
 // Todos los endpoints de usuarios requieren autenticación
 usersRouter.use(authenticate);

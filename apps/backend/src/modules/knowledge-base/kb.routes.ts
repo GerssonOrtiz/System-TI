@@ -8,7 +8,7 @@ import { validate } from '../../middlewares/validate.middleware';
 import { kbController } from './kb.controller';
 import { CreateKbArticleSchema, UpdateKbArticleSchema } from './kb.schema';
 
-export const kbRouter = Router();
+export const kbRouter: Router = Router();
 
 // Todos los endpoints de KB requieren autenticación
 kbRouter.use(authenticate);

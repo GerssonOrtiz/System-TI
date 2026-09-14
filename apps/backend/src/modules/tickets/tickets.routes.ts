@@ -12,7 +12,7 @@ import {
   UpdateTicketStatusSchema,
 } from './tickets.schema';
 
-export const ticketsRouter = Router();
+export const ticketsRouter: Router = Router();
 
 // Todos los endpoints de tickets requieren autenticación
 ticketsRouter.use(authenticate);

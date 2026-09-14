@@ -7,7 +7,7 @@ import { validate } from '../../middlewares/validate.middleware';
 import { authController } from './auth.controller';
 import { LoginSchema, RefreshTokenSchema, RegisterSchema } from './auth.schema';
 
-export const authRouter = Router();
+export const authRouter: Router = Router();
 
 // POST /api/v1/auth/login
 authRouter.post('/login', authRateLimiter, validate({ body: LoginSchema }), authController.login);

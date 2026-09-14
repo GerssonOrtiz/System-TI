@@ -13,7 +13,7 @@ import { usersRouter } from '../modules/users/users.routes';
 import { ApiResponse } from '../shared/utils/ApiResponse';
 import { asyncHandler } from '../shared/utils/asyncHandler';
 
-export const router = Router();
+export const router: Router = Router();
 
 // ─── Info de la API ───────────────────────────────────────────────────────────
 router.get('/', (_req, res) => {

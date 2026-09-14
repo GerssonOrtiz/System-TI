@@ -6,7 +6,7 @@ import { commentsController } from './comments.controller';
 import { CreateCommentSchema } from './comments.schema';
 
 // Router con mergeParams para acceder a :id del router padre (tickets)
-export const commentsRouter = Router({ mergeParams: true });
+export const commentsRouter: Router = Router({ mergeParams: true });
 
 commentsRouter.get('/', commentsController.list);
 commentsRouter.post('/', validate({ body: CreateCommentSchema }), commentsController.create);
