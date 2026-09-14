@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import pinoHttp from 'pino-http';
 import swaggerUi from 'swagger-ui-express';
@@ -10,7 +10,7 @@ import { errorMiddleware } from './middlewares/error.middleware';
 import { apiRateLimiter } from './middlewares/rateLimit.middleware';
 import { router } from './routes';
 
-export function createApp() {
+export function createApp(): Express {
   const app = express();
 
   // ─── Seguridad básica ──────────────────────────────────────────────────────
