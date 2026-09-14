@@ -19,6 +19,9 @@ FROM node:20-alpine AS runner
 
 RUN apk add --no-cache openssl
 
+# Instalar pnpm globalmente en el contenedor de producción
+RUN npm install -g pnpm@9
+
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -30,5 +33,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-# Ejecutar las migraciones llamando al CLI de Prisma mediante node directamente
-CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
+# pnpm resolverá la versión exacta e interna de Prisma dentro del workspace de backend
+CMD ["sh", "-c", "pnpm --filter backend prisma migrate deploy && node apps/backend/dist/server.js"]
