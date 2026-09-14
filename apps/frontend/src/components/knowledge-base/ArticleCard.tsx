@@ -1,13 +1,13 @@
 import { BookOpen, Eye, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import type { KBArticleResponse } from '@sistema-ti/shared';
+import type { KnowledgeArticleDTO } from '@sistema-ti/shared';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ArticleCardProps {
-  article: KBArticleResponse;
+  article: KnowledgeArticleDTO;
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
@@ -35,7 +35,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
         {article.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {article.tags.map((tag) => (
+            {article.tags.map((tag: string) => (
               <span key={tag} className="inline-flex items-center text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                 <Tag className="h-2.5 w-2.5 mr-0.5" />
                 {tag}

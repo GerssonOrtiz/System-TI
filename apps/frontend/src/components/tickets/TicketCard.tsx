@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, MessageSquare } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 import type { TicketDTO } from '@sistema-ti/shared';
 import { TicketCategory, TicketPriority, TicketStatus } from '@sistema-ti/shared';

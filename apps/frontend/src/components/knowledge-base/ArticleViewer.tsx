@@ -1,12 +1,12 @@
 import ReactMarkdown from 'react-markdown';
 import { Calendar, Eye, Tag, User } from 'lucide-react';
 
-import type { KBArticleResponse } from '@sistema-ti/shared';
+import type { KnowledgeArticleDTO } from '@sistema-ti/shared';
 
 import { Badge } from '@/components/ui/badge';
 
 interface ArticleViewerProps {
-  article: KBArticleResponse;
+  article: KnowledgeArticleDTO;
 }
 
 export function ArticleViewer({ article }: ArticleViewerProps) {
@@ -40,7 +40,7 @@ export function ArticleViewer({ article }: ArticleViewerProps) {
 
         {article.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 pt-1">
-            {article.tags.map((tag) => (
+            {article.tags.map((tag: string) => (
               <Badge key={tag} variant="outline" className="text-[11px] font-normal">
                 <Tag className="h-2.5 w-2.5 mr-1" />
                 {tag}

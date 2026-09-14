@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TaskPrioritySchema, type CreateTaskInput } from '@sistema-ti/shared';
+import type { CreateTaskInput, TaskPriority } from '@sistema-ti/shared';
+import { TaskPriority as TaskPriorityEnum } from '@sistema-ti/shared';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 const taskFormSchema = z.object({
   title: z.string().min(3, 'El título debe tener al menos 3 caracteres'),
   description: z.string().optional(),
-  priority: TaskPrioritySchema,
+  priority: z.nativeEnum(TaskPriorityEnum),
   dueDate: z.string().optional(),
 });
 
@@ -35,7 +36,7 @@ export function TaskForm({ onSubmit, isLoading }: TaskFormProps) {
     defaultValues: {
       title: '',
       description: '',
-      priority: 'MEDIA',
+      priority: TaskPriorityEnum.MEDIA,
     },
   });
 
@@ -71,14 +72,14 @@ export function TaskForm({ onSubmit, isLoading }: TaskFormProps) {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Prioridad</Label>
-          <Select value={priority} onValueChange={(val) => setValue('priority', val as any)}>
+          <Select value={priority} onValueChange={(val) => setValue('priority', val as TaskPriority)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="BAJA">Baja</SelectItem>
-              <SelectItem value="MEDIA">Media</SelectItem>
-              <SelectItem value="ALTA">Alta</SelectItem>
+              <SelectItem value={TaskPriorityEnum.BAJA}>Baja</SelectItem>
+              <SelectItem value={TaskPriorityEnum.MEDIA}>Media</SelectItem>
+              <SelectItem value={TaskPriorityEnum.ALTA}>Alta</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@sistema-ti/shared': path.resolve(__dirname, '../../packages/shared/src'),
+      '@sistema-ti/shared': path.resolve(__dirname, '../../packages/shared/dist/index.mjs'),
     },
   },
   server: {

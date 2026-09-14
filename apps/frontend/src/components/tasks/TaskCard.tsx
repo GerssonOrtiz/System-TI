@@ -1,6 +1,6 @@
-import { Calendar, CheckCircle2, Clock, Trash2 } from 'lucide-react';
+import { Calendar, Clock, Trash2 } from 'lucide-react';
 
-import type { TaskResponse, TaskStatus } from '@sistema-ti/shared';
+import type { TaskDTO, TaskStatus } from '@sistema-ti/shared';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useDeleteTask, useUpdateTaskStatus } from '@/hooks/useTasks';
 
 interface TaskCardProps {
-  task: TaskResponse;
+  task: TaskDTO;
 }
 
 export function TaskCard({ task }: TaskCardProps) {
@@ -16,10 +16,10 @@ export function TaskCard({ task }: TaskCardProps) {
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
 
   const handleStatusChange = (newStatus: TaskStatus) => {
-    updateStatus({ id: task.id, status: newStatus });
+    updateStatus({ id: task.id, data: { status: newStatus } });
   };
 
-  const priorityColors = {
+  const priorityColors: Record<string, string> = {
     BAJA: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
     MEDIA: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
     ALTA: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
@@ -31,7 +31,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-sm font-semibold">{task.title}</CardTitle>
           <span
-            className={`inline-block rounded px-2 py-0.5 text-xs font-medium ${priorityColors[task.priority]}`}
+            className={`inline-block rounded px-2 py-0.5 text-xs font-medium ${priorityColors[task.priority] ?? ''}`}
           >
             {task.priority}
           </span>
@@ -52,7 +52,7 @@ export function TaskCard({ task }: TaskCardProps) {
           {task.linkedTicketId && (
             <div className="flex items-center gap-1 text-primary">
               <Clock className="h-3.5 w-3.5" />
-              <span>Ticket vínculado</span>
+              <span>Ticket vinculado</span>
             </div>
           )}
         </div>

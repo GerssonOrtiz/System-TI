@@ -72,7 +72,7 @@ export function TicketForm({ onSubmit, isLoading, defaultValues }: TicketFormPro
         />
         {errors.title && (
           <p id="title-error" className="text-sm text-destructive" role="alert">
-            {errors.title.message}
+            {errors.title.message as string}
           </p>
         )}
       </div>
@@ -91,7 +91,7 @@ export function TicketForm({ onSubmit, isLoading, defaultValues }: TicketFormPro
         />
         {errors.description && (
           <p id="description-error" className="text-sm text-destructive" role="alert">
-            {errors.description.message}
+            {errors.description.message as string}
           </p>
         )}
       </div>

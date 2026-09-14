@@ -69,14 +69,14 @@ export function useUpdateTask(id: string) {
   });
 }
 
-export function useUpdateTaskStatus(id: string) {
+export function useUpdateTaskStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: UpdateTaskStatusInput) =>
+    mutationFn: ({ id, data }: { id: string; data: UpdateTaskStatusInput }) =>
       tasksApi.updateStatus(id, data).then((r) => r.data.data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       void qc.invalidateQueries({ queryKey: taskKeys.lists() });
-      void qc.invalidateQueries({ queryKey: taskKeys.detail(id) });
+      void qc.invalidateQueries({ queryKey: taskKeys.detail(variables.id) });
       toast.success('Estado de tarea actualizado');
     },
     onError: (err) => {

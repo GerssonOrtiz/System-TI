@@ -1,16 +1,17 @@
-import type { TaskResponse, TaskStatus } from '@sistema-ti/shared';
+import type { TaskDTO, TaskStatus } from '@sistema-ti/shared';
+import { TaskStatus as TaskStatusEnum } from '@sistema-ti/shared';
 
 import { TaskCard } from './TaskCard';
 
 interface KanbanBoardProps {
-  tasks: TaskResponse[];
+  tasks: TaskDTO[];
 }
 
 const columns: { id: TaskStatus; title: string; color: string }[] = [
-  { id: 'PENDIENTE', title: 'Pendiente', color: 'border-slate-300 dark:border-slate-700' },
-  { id: 'EN_PROGRESO', title: 'En Progreso', color: 'border-blue-400 dark:border-blue-700' },
-  { id: 'COMPLETADA', title: 'Completada', color: 'border-green-400 dark:border-green-700' },
-  { id: 'CANCELADA', title: 'Cancelada', color: 'border-red-300 dark:border-red-800' },
+  { id: TaskStatusEnum.PENDIENTE, title: 'Pendiente', color: 'border-slate-300 dark:border-slate-700' },
+  { id: TaskStatusEnum.EN_PROGRESO, title: 'En Progreso', color: 'border-blue-400 dark:border-blue-700' },
+  { id: TaskStatusEnum.COMPLETADA, title: 'Completada', color: 'border-green-400 dark:border-green-700' },
+  { id: TaskStatusEnum.CANCELADA, title: 'Cancelada', color: 'border-red-300 dark:border-red-800' },
 ];
 
 export function KanbanBoard({ tasks }: KanbanBoardProps) {

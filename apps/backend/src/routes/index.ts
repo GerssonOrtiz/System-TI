@@ -47,15 +47,15 @@ router.get(
     ]);
 
     const ticketsByStatus = Object.fromEntries(
-      ticketsByStatusRaw.map((r) => [r.status, r._count.id]),
+      ticketsByStatusRaw.map((r: { status: string; _count: { id: number } }) => [r.status, r._count.id]),
     );
 
     const ticketsByPriority = Object.fromEntries(
-      ticketsByPriorityRaw.map((r) => [r.priority, r._count.id]),
+      ticketsByPriorityRaw.map((r: { priority: string; _count: { id: number } }) => [r.priority, r._count.id]),
     );
 
     const tasksByStatus = Object.fromEntries(
-      tasksByStatusRaw.map((r) => [r.status, r._count.id]),
+      tasksByStatusRaw.map((r: { status: string; _count: { id: number } }) => [r.status, r._count.id]),
     );
 
     const metrics = {

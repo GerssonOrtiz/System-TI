@@ -26,6 +26,10 @@ COPY apps/backend/package.json ./apps/backend/
 COPY apps/backend/dist ./apps/backend/dist
 COPY apps/backend/prisma ./apps/backend/prisma
 
+# Copiar cliente de Prisma generado en el builder
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+
 RUN npm install -g pnpm && pnpm install --prod
 
 EXPOSE 4000

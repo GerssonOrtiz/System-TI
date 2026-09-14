@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { CreateKBArticleInput } from '@sistema-ti/shared';
+import type { CreateKbArticleInput } from '@sistema-ti/shared';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -21,7 +20,7 @@ type ArticleFormData = z.infer<typeof articleFormSchema>;
 
 interface ArticleEditorProps {
   initialData?: Partial<ArticleFormData>;
-  onSubmit: (data: CreateKBArticleInput) => Promise<void>;
+  onSubmit: (data: CreateKbArticleInput) => Promise<void>;
   isLoading?: boolean;
 }
 

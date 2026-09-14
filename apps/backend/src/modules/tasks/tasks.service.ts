@@ -81,7 +81,7 @@ export const tasksService = {
       title: input.title,
       description: input.description,
       priority: input.priority as Parameters<typeof tasksRepository.update>[1]['priority'],
-      dueDate: input.dueDate ? new Date(input.dueDate) : input.dueDate,
+      dueDate: input.dueDate ? new Date(input.dueDate) : input.dueDate === null ? null : undefined,
       linkedTicketId: input.linkedTicketId,
     });
 

@@ -172,7 +172,7 @@ export function TicketDetallePage() {
                 />
                 {errors.content && (
                   <p id="comment-error" className="text-sm text-destructive" role="alert">
-                    {errors.content.message}
+                    {errors.content.message as string}
                   </p>
                 )}
               </div>

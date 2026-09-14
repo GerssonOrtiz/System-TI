@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import type { KnowledgeArticleDTO } from '@sistema-ti/shared';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArticleCard } from '@/components/knowledge-base/ArticleCard';
 import { ArticleEditor } from '@/components/knowledge-base/ArticleEditor';
-import { useCreateKBArticle, useKnowledgeBase } from '@/hooks/useKnowledgeBase';
+import { useCreateKbArticle, useKbArticles } from '@/hooks/useKnowledgeBase';
 
 export function GestionArticulosPage() {
   const [openDialog, setOpenDialog] = useState(false);
-  const { data, isLoading, isError } = useKnowledgeBase();
-  const { mutateAsync: createArticle, isPending } = useCreateKBArticle();
+  const { data, isLoading, isError } = useKbArticles();
+  const { mutateAsync: createArticle, isPending } = useCreateKbArticle();
 
   return (
     <div className="space-y-6">
@@ -61,7 +62,7 @@ export function GestionArticulosPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {data.data.map((article) => (
+          {data.data.map((article: KnowledgeArticleDTO) => (
             <ArticleCard key={article.id} article={article} />
           ))}
         </div>

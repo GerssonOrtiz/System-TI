@@ -93,7 +93,7 @@ export function LoginPage() {
               />
               {errors.email && (
                 <p id="email-error" className="text-sm text-destructive" role="alert">
-                  {errors.email.message}
+                  {errors.email.message as string}
                 </p>
               )}
             </div>
@@ -112,7 +112,7 @@ export function LoginPage() {
               />
               {errors.password && (
                 <p id="password-error" className="text-sm text-destructive" role="alert">
-                  {errors.password.message}
+                  {errors.password.message as string}
                 </p>
               )}
             </div>

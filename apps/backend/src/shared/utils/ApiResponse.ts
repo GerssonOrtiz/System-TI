@@ -4,11 +4,13 @@ import type { PaginationMeta } from '@sistema-ti/shared';
 
 /** Helpers para formatear respuestas HTTP con el envelope estándar */
 export const ApiResponse = {
-  success<T>(res: Response, data: T, statusCode = 200, message?: string) {
+  success<T>(res: Response, data: T, statusCodeOrMessage: number | string = 200, message?: string) {
+    const statusCode = typeof statusCodeOrMessage === 'number' ? statusCodeOrMessage : 200;
+    const msg = typeof statusCodeOrMessage === 'string' ? statusCodeOrMessage : message;
     return res.status(statusCode).json({
       success: true,
       data,
-      ...(message && { message }),
+      ...(msg && { message: msg }),
     });
   },
 

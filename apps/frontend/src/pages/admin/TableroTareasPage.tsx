@@ -10,7 +10,7 @@ import { useCreateTask, useTasks } from '@/hooks/useTasks';
 
 export function TableroTareasPage() {
   const [openDialog, setOpenDialog] = useState(false);
-  const { data: tasks, isLoading, isError } = useTasks();
+  const { data: response, isLoading, isError } = useTasks();
   const { mutateAsync: createTask, isPending } = useCreateTask();
 
   return (
@@ -56,7 +56,7 @@ export function TableroTareasPage() {
           Error al cargar el tablero de tareas.
         </div>
       ) : (
-        <KanbanBoard tasks={tasks ?? []} />
+        <KanbanBoard tasks={response?.data ?? []} />
       )}
     </div>
   );

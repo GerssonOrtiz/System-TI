@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@sistema-ti/shared": ["../../packages/shared/src"]
+      "@sistema-ti/shared": ["../../packages/shared/dist"]
     }
   },
   "include": ["src"],

@@ -19,9 +19,9 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "@sistema-ti/shared": ["../../packages/shared/src"]
+      "@sistema-ti/shared": ["../../packages/shared/dist"]
     }
   },
-  "include": ["src", "prisma"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "tests"]
 }
