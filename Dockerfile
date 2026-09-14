@@ -30,5 +30,5 @@ COPY --from=builder /app/apps/backend ./apps/backend
 
 EXPOSE 4000
 
-# Usar el binario local de prisma mediante pnpm para evitar que npx descargue Prisma v7
-CMD ["sh", "-c", "pnpm --filter backend exec prisma migrate deploy --schema=prisma/schema.prisma && node apps/backend/dist/server.js"]
+# Usar el binario directo de Prisma en node_modules para no depender de pnpm/npx en producción
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy --schema=apps/backend/prisma/schema.prisma && node apps/backend/dist/server.js"]
