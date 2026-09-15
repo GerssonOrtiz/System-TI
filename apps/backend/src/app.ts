@@ -17,9 +17,25 @@ export function createApp(): Express {
   app.use(helmet());
 
   // ─── CORS ─────────────────────────────────────────────────────────────────
+  const allowedOrigins = [
+    env.FRONTEND_URL?.replace(/\/$/, ''), // Normaliza eliminando la barra final si existe
+    'https://frontend-zq3g.vercel.app',  // Dominio explícito en Vercel
+  ].filter(Boolean) as string[];
+
   app.use(
     cors({
-      origin: env.NODE_ENV === 'production' ? env.FRONTEND_URL : true,
+      origin: (origin, callback) => {
+        // En desarrollo o cuando se consulte sin header Origin (Postman, cURL, etc.)
+        if (!origin || env.NODE_ENV !== 'production') {
+          return callback(null, true);
+        }
+
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+
+        return callback(new Error(`Origen ${origin} no permitido por CORS`));
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
