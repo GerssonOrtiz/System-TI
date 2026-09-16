@@ -3,7 +3,7 @@
 > **Proyecto:** Sistema de Gestión de TI (Mesa de Ayuda / Tareas Internas / Base de Conocimiento)  
 > **Arquitectura:** Monolito Modular desacoplado con Monorepo (Express API + Prisma + React/Vite + Zod + TanStack Query + Tailwind CSS)  
 > **Documento de Referencia Base:** `arquitectura-sistema-gestion-ti.md`  
-> **Fecha de Actualización:** 13 de Septiembre, 2026
+> **Fecha de Actualización:** 15 de Septiembre, 2026
 
 ---
 
@@ -43,7 +43,7 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
 
 ## 3. Lo que ya se ha avanzado o diseñado hasta este momento
 
-### 3.1 Backend & Base de Datos (Completado ~95%)
+### 3.1 Backend & Base de Datos (Completado 100%)
 - **Esquema de Datos (Prisma):** Tablas `users`, `tickets`, `ticket_comments`, `tasks`, `knowledge_articles` y `audit_logs` con índices y relaciones.
 - **Seed de Datos (`prisma/seed.ts`):** Creación de usuario Administrador y Solicitantes iniciales con hash de contraseñas bcrypt.
 - **Módulos de la API REST:**
@@ -55,7 +55,7 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
   - `dashboard`: Endpoint de agregación `/dashboard/metrics`.
   - `audit`: Servicio centralizado `audit.service.ts` invocado en cada cambio de estado.
 
-### 3.2 Frontend SPA (Completado ~100%)
+### 3.2 Frontend SPA (Completado 100%)
 - **Enrutamiento y Seguridad:** Creados `AppRouter.tsx`, `ProtectedRoute` y `RoleRoute` separando vistas de Solicitante y Administrador.
 - **Vistas del Solicitante:** `MisTicketsPage.tsx`, `NuevoTicketPage.tsx`, `TicketDetallePage.tsx` y `BaseConocimientoPage.tsx`.
 - **Vistas del Administrador TI:**
