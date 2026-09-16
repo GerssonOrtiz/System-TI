@@ -13,10 +13,10 @@ const publicUserSelect = {
 } as const;
 
 export const authRepository = {
-  /** Busca un usuario por email, incluyendo passwordHash (solo para autenticación) */
-  async findByEmail(email: string) {
+  /** Busca un usuario por username, incluyendo passwordHash (solo para autenticación) */
+  async findByUsername(username: string) {
     return prisma.user.findUnique({
-      where: { email },
+      where: { username },
       select: {
         ...publicUserSelect,
         passwordHash: true,
@@ -35,7 +35,7 @@ export const authRepository = {
   /** Crea un nuevo usuario */
   async create(data: {
     fullName: string;
-    email: string;
+    username: string;
     passwordHash: string;
     role?: Role;
   }) {

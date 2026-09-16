@@ -9,7 +9,7 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
-  SEED_ADMIN_EMAIL: z.string().email().optional(),
+  SEED_ADMIN_EMAIL: z.string().username().optional(),
   SEED_ADMIN_PASSWORD: z.string().optional(),
 });
 

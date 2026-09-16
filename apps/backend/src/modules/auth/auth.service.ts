@@ -13,7 +13,7 @@ import { authRepository } from './auth.repository';
 
 interface TokenPayload {
   sub: string;
-  email: string;
+  username: string;
   role: string;
   type: 'access' | 'refresh';
 }
@@ -33,7 +33,7 @@ function signRefreshToken(payload: Omit<TokenPayload, 'type'>): string {
 function toPublicUser(user: {
   id: string;
   fullName: string;
-  email: string;
+  username: string;
   role: string;
   isActive: boolean;
   createdAt: Date;
@@ -41,7 +41,7 @@ function toPublicUser(user: {
   return {
     id: user.id,
     fullName: user.fullName,
-    email: user.email,
+    username: user.username,
     role: user.role as PublicUser['role'],
     isActive: user.isActive,
     createdAt: user.createdAt.toISOString(),
@@ -50,7 +50,7 @@ function toPublicUser(user: {
 
 export const authService = {
   async login(input: LoginInput, meta?: { ip?: string }): Promise<AuthResponse> {
-    const user = await authRepository.findByEmail(input.email);
+    const user = await authRepository.findByUsername(input.username);
 
     if (!user || !user.isActive) {
       // Registrar intento fallido si el usuario existe pero está inactivo
@@ -79,7 +79,7 @@ export const authService = {
       throw ApiError.unauthorized('Credenciales inválidas');
     }
 
-    const tokenPayload = { sub: user.id, email: user.email, role: user.role };
+    const tokenPayload = { sub: user.id, username: user.username, role: user.role };
     const accessToken = signAccessToken(tokenPayload);
     const refreshToken = signRefreshToken(tokenPayload);
 
@@ -114,20 +114,20 @@ export const authService = {
       throw ApiError.unauthorized('Usuario no encontrado o inactivo');
     }
 
-    const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.role });
+    const accessToken = signAccessToken({ sub: user.id, username: user.username, role: user.role });
     return { accessToken };
   },
 
   async register(input: RegisterInput): Promise<AuthResponse> {
-    const existing = await authRepository.findByEmail(input.email);
+    const existing = await authRepository.findByUsername(input.username);
     if (existing) {
-      throw ApiError.conflict('EMAIL_ALREADY_EXISTS', 'Ya existe una cuenta con ese correo electrónico');
+      throw ApiError.conflict('USERNAME_ALREADY_EXISTS', 'Ya existe una cuenta con ese nombre de usuario');
     }
 
     const passwordHash = await bcrypt.hash(input.password, 12);
     const user = await authRepository.create({
       fullName: input.fullName,
-      email: input.email,
+      username: input.username,
       passwordHash,
       role: input.role,
     });
@@ -137,10 +137,10 @@ export const authService = {
       entity: AuditEntity.USER,
       entityId: user.id,
       userId: user.id,
-      metadata: { email: user.email, role: user.role },
+      metadata: { username: user.username, role: user.role },
     });
 
-    const tokenPayload = { sub: user.id, email: user.email, role: user.role };
+    const tokenPayload = { sub: user.id, username: user.username, role: user.role };
     const accessToken = signAccessToken(tokenPayload);
     const refreshToken = signRefreshToken(tokenPayload);
 

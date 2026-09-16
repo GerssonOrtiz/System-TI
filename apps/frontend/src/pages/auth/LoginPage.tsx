@@ -81,19 +81,19 @@ export function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
             {/* Campo Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">Correo electrónico</Label>
+              <Label htmlFor="username">Nombre de Usuario o ID</Label>
               <Input
-                id="email"
-                type="email"
+                id="username"
+                type="text"
                 placeholder="usuario@empresa.com"
-                autoComplete="email"
-                aria-describedby={errors.email ? 'email-error' : undefined}
-                aria-invalid={!!errors.email}
-                {...register('email')}
+                autoComplete="username"
+                aria-describedby={errors.username ? 'username-error' : undefined}
+                aria-invalid={!!errors.username}
+                {...register('username')}
               />
-              {errors.email && (
-                <p id="email-error" className="text-sm text-destructive" role="alert">
-                  {errors.email.message as string}
+              {errors.username && (
+                <p id="username-error" className="text-sm text-destructive" role="alert">
+                  {errors.username.message as string}
                 </p>
               )}
             </div>

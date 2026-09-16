@@ -5,7 +5,7 @@ import { prisma } from '../../config/database';
 const publicUserSelect = {
   id: true,
   fullName: true,
-  email: true,
+  username: true,
   role: true,
   isActive: true,
   createdAt: true,
@@ -49,7 +49,7 @@ export const usersRepository = {
   async findAdmins() {
     return prisma.user.findMany({
       where: { role: 'ADMIN_TI', isActive: true },
-      select: { id: true, fullName: true, email: true },
+      select: { id: true, fullName: true, username: true },
       orderBy: { fullName: 'asc' },
     });
   },
@@ -58,6 +58,27 @@ export const usersRepository = {
     return prisma.user.update({
       where: { id },
       data,
+      select: publicUserSelect,
+    });
+  },
+
+  async findByUsername(username: string) {
+    return prisma.user.findUnique({
+      where: { username },
+    });
+  },
+
+  async create(data: { fullName: string; username: string; passwordHash: string; role: Role }) {
+    return prisma.user.create({
+      data,
+      select: publicUserSelect,
+    });
+  },
+
+  async updatePassword(id: string, passwordHash: string) {
+    return prisma.user.update({
+      where: { id },
+      data: { passwordHash },
       select: publicUserSelect,
     });
   },

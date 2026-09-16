@@ -38,4 +38,26 @@ export const usersController = {
     const admins = await usersService.listAdmins();
     return ApiResponse.success(res, admins);
   }),
+
+  /** POST /api/v1/users */
+  createUser: asyncHandler(async (req: Request, res: Response) => {
+    const result = await usersService.createUser(req.body as any);
+    return ApiResponse.created(res, result, 'Usuario creado correctamente');
+  }),
+
+  /** PUT /api/v1/users/:id/password */
+  resetPassword: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { password } = req.body;
+    await usersService.resetPassword(id, password);
+    return ApiResponse.success(res, null, 200, 'Contraseña actualizada');
+  }),
+
+  /** PUT /api/v1/users/:id/status */
+  toggleStatus: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { isActive } = req.body;
+    const result = await usersService.toggleStatus(id, isActive);
+    return ApiResponse.success(res, result, 200, 'Estado actualizado');
+  }),
 };

@@ -19,3 +19,8 @@ usersRouter.get('/admins', authorize([Role.ADMIN_TI]), usersController.listAdmin
 
 // GET /api/v1/users — listado completo, solo ADMIN_TI
 usersRouter.get('/', authorize([Role.ADMIN_TI]), usersController.listUsers);
+
+// Gestión de usuarios (Solo ADMIN_TI)
+usersRouter.post('/', authorize([Role.ADMIN_TI]), usersController.createUser);
+usersRouter.put('/:id/password', authorize([Role.ADMIN_TI]), usersController.resetPassword);
+usersRouter.put('/:id/status', authorize([Role.ADMIN_TI]), usersController.toggleStatus);

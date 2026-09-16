@@ -3,9 +3,9 @@ import { Role, TicketCategory, TicketPriority, TicketStatus, TaskPriority, TaskS
 
 // ─── Schemas de Autenticación ─────────────────────────────────────────────────
 export const LoginSchema = z.object({
-  email: z
-    .string({ required_error: 'El correo es requerido' })
-    .email('Correo electrónico inválido')
+  username: z
+    .string({ required_error: 'El usuario es requerido' })
+    .min(3, 'El usuario debe tener al menos 3 caracteres')
     .toLowerCase(),
   password: z
     .string({ required_error: 'La contraseña es requerida' })
@@ -18,9 +18,9 @@ export const RegisterSchema = z.object({
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(100, 'El nombre no puede exceder 100 caracteres')
     .trim(),
-  email: z
-    .string({ required_error: 'El correo es requerido' })
-    .email('Correo electrónico inválido')
+  username: z
+    .string({ required_error: 'El usuario es requerido' })
+    .min(3, 'El usuario debe tener al menos 3 caracteres')
     .toLowerCase(),
   password: z
     .string({ required_error: 'La contraseña es requerida' })

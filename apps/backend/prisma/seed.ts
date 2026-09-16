@@ -6,45 +6,45 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando seed de la base de datos...');
 
-  const adminEmail = process.env['SEED_ADMIN_EMAIL'] ?? 'admin@empresa.com';
+  const adminUsername = process.env['SEED_ADMIN_USERNAME'] ?? 'admin';
   const adminPassword = process.env['SEED_ADMIN_PASSWORD'] ?? 'Admin1234!';
 
   // ─── Admin TI ──────────────────────────────────────────────────────────────
   const adminHash = await bcrypt.hash(adminPassword, 12);
   const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
+    where: { username: adminUsername },
     update: {},
     create: {
       fullName: 'Administrador TI',
-      email: adminEmail,
+      username: adminUsername,
       passwordHash: adminHash,
       role: Role.ADMIN_TI,
     },
   });
-  console.log(`✅ Admin creado: ${admin.email}`);
+  console.log(`✅ Admin creado: ${admin.username}`);
 
   // ─── Usuarios Solicitantes de ejemplo ─────────────────────────────────────
   const solicitantes = [
-    { fullName: 'María García', email: 'maria.garcia@empresa.com' },
-    { fullName: 'Carlos López', email: 'carlos.lopez@empresa.com' },
-    { fullName: 'Ana Martínez', email: 'ana.martinez@empresa.com' },
+    { fullName: 'María García', username: 'mgarcia' },
+    { fullName: 'Carlos López', username: 'clopez' },
+    { fullName: 'Ana Martínez', username: 'amartinez' },
   ];
 
   const createdUsers: Array<{ id: string; email: string }> = [];
   for (const s of solicitantes) {
     const hash = await bcrypt.hash('Solicitante1234!', 12);
     const user = await prisma.user.upsert({
-      where: { email: s.email },
+      where: { username: s.username },
       update: {},
       create: {
         fullName: s.fullName,
-        email: s.email,
+        username: s.username,
         passwordHash: hash,
         role: Role.SOLICITANTE,
       },
     });
-    createdUsers.push({ id: user.id, email: user.email });
-    console.log(`✅ Solicitante creado: ${user.email}`);
+    createdUsers.push({ id: user.id, username: user.username });
+    console.log(`✅ Solicitante creado: ${user.username}`);
   }
 
   // ─── Tickets de ejemplo ───────────────────────────────────────────────────
@@ -55,7 +55,7 @@ async function main() {
       status: TicketStatus.ABIERTO,
       priority: TicketPriority.ALTA,
       category: TicketCategory.HARDWARE,
-      creatorEmail: 'maria.garcia@empresa.com',
+      creatorUsername: 'mgarcia',
     },
     {
       title: 'No puedo acceder al sistema ERP',
@@ -63,8 +63,8 @@ async function main() {
       status: TicketStatus.EN_PROGRESO,
       priority: TicketPriority.MEDIA,
       category: TicketCategory.ACCESOS,
-      creatorEmail: 'carlos.lopez@empresa.com',
-      assigneeEmail: adminEmail,
+      creatorUsername: 'clopez',
+      assigneeUsername: adminUsername,
     },
     {
       title: 'La impresora del departamento de contabilidad no imprime en color',
@@ -72,7 +72,7 @@ async function main() {
       status: TicketStatus.RESUELTO,
       priority: TicketPriority.BAJA,
       category: TicketCategory.HARDWARE,
-      creatorEmail: 'ana.martinez@empresa.com',
+      creatorUsername: 'amartinez',
     },
     {
       title: 'Solicitud de acceso a carpeta compartida en servidor',
@@ -80,16 +80,16 @@ async function main() {
       status: TicketStatus.ABIERTO,
       priority: TicketPriority.MEDIA,
       category: TicketCategory.ACCESOS,
-      creatorEmail: 'maria.garcia@empresa.com',
+      creatorUsername: 'mgarcia',
     },
   ];
 
   for (const t of ticketsData) {
-    const creator = await prisma.user.findUnique({ where: { email: t.creatorEmail } });
+    const creator = await prisma.user.findUnique({ where: { username: t.creatorUsername } });
     if (!creator) continue;
 
-    const assignee = t.assigneeEmail
-      ? await prisma.user.findUnique({ where: { email: t.assigneeEmail } })
+    const assignee = t.assigneeUsername
+      ? await prisma.user.findUnique({ where: { username: t.assigneeUsername } })
       : null;
 
     await prisma.ticket.create({
@@ -226,8 +226,8 @@ Crea un ticket con categoría "Red" y adjunta una captura de pantalla del error.
 
   console.log('\n🎉 Seed completado exitosamente');
   console.log(`\n📋 Credenciales de prueba:`);
-  console.log(`   Admin TI:    ${adminEmail} / ${adminPassword}`);
-  console.log(`   Solicitante: maria.garcia@empresa.com / Solicitante1234!`);
+  console.log(`   Admin TI:    ${adminUsername} / ${adminPassword}`);
+  console.log(`   Solicitante: mgarcia / Solicitante1234!`);
 }
 
 main()

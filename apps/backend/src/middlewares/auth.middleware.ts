@@ -8,7 +8,7 @@ import { ApiError } from '../shared/utils/ApiError';
 
 interface JwtPayload {
   sub: string;
-  email: string;
+  username: string;
   role: Role;
   type: 'access' | 'refresh';
 }
@@ -35,7 +35,7 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
 
     req.user = {
       id: payload.sub,
-      email: payload.email,
+      email: payload.username,
       role: payload.role,
     };
 

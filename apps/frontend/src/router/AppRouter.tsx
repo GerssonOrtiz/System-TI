@@ -11,6 +11,7 @@ import { DashboardPage } from '@/pages/admin/DashboardPage';
 import { GestionTicketsPage } from '@/pages/admin/GestionTicketsPage';
 import { TableroTareasPage } from '@/pages/admin/TableroTareasPage';
 import { GestionArticulosPage } from '@/pages/admin/GestionArticulosPage';
+import { GestionUsuariosPage } from '@/pages/admin/GestionUsuariosPage';
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage';
 import { useAuthStore } from '@/store/authStore';
 import { ProtectedRoute } from './ProtectedRoute';
@@ -57,6 +58,7 @@ export function AppRouter() {
               <Route path="tickets" element={<GestionTicketsPage />} />
               <Route path="tareas" element={<TableroTareasPage />} />
               <Route path="articulos" element={<GestionArticulosPage />} />
+              <Route path="usuarios" element={<GestionUsuariosPage />} />
             </Route>
           </Route>
         </Route>

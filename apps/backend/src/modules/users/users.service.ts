@@ -58,4 +58,37 @@ export const usersService = {
 
     return usersRepository.update(targetId, data);
   },
+
+  async createUser(data: import('@sistema-ti/shared').RegisterInput) {
+    const existing = await usersRepository.findByUsername(data.username);
+    if (existing) throw ApiError.conflict('USERNAME_ALREADY_EXISTS', 'Ya existe una cuenta con ese usuario');
+    
+    const bcrypt = require('bcryptjs');
+    const passwordHash = await bcrypt.hash(data.password, 12);
+    
+    return usersRepository.create({
+      fullName: data.fullName,
+      username: data.username,
+      passwordHash,
+      role: data.role as Role,
+    });
+  },
+
+  async resetPassword(targetId: string, newPassword: string) {
+    const user = await usersRepository.findById(targetId);
+    if (!user) throw ApiError.notFound('USER_NOT_FOUND', 'Usuario no encontrado');
+    
+    const bcrypt = require('bcryptjs');
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+    
+    await usersRepository.updatePassword(targetId, passwordHash);
+    return { success: true };
+  },
+
+  async toggleStatus(targetId: string, isActive: boolean) {
+    const user = await usersRepository.findById(targetId);
+    if (!user) throw ApiError.notFound('USER_NOT_FOUND', 'Usuario no encontrado');
+    
+    return usersRepository.update(targetId, { isActive });
+  },
 };

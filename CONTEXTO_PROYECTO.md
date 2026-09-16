@@ -3,7 +3,7 @@
 > **Proyecto:** Sistema de Gestión de TI (Mesa de Ayuda / Tareas Internas / Base de Conocimiento)  
 > **Arquitectura:** Monolito Modular desacoplado con Monorepo (Express API + Prisma + React/Vite + Zod + TanStack Query + Tailwind CSS)  
 > **Documento de Referencia Base:** `arquitectura-sistema-gestion-ti.md`  
-> **Fecha de Actualización:** 15 de Septiembre, 2026
+> **Fecha de Actualización:** 16 de Septiembre, 2026
 
 ---
 
@@ -48,7 +48,7 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
 - **Seed de Datos (`prisma/seed.ts`):** Creación de usuario Administrador y Solicitantes iniciales con hash de contraseñas bcrypt.
 - **Módulos de la API REST:**
   - `auth`: `/auth/login`, `/auth/refresh` con rotación JWT.
-  - `users`: `/users/me`, `/users` (listado para asignaciones).
+  - `users`: `/users/me`, `/users` (listado y creación), `/users/:id/password`, `/users/:id/status`.
   - `tickets`: CRUD de tickets, asignación de técnicos, cambio de estados y comentarios públicos/internos (`isInternal`).
   - `tasks`: CRUD de tareas internas y actualización de estados.
   - `knowledge-base`: Gestión de artículos con visibilidad por rol y conteo de lecturas.
@@ -61,9 +61,11 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
 - **Vistas del Administrador TI:**
   - `DashboardPage.tsx`: Métricas de tickets abiertos, tareas pendientes y tarjetas por prioridad.
   - `GestionTicketsPage.tsx`: Administración de tickets con filtros.
+  - `GestionUsuariosPage.tsx`: Alta, listado y gestión de credenciales/estados de usuarios.
   - `TableroTareasPage.tsx`: Kanban operativo organizado por columnas de estado.
   - `GestionArticulosPage.tsx`: Editor y publicación de guías en Markdown.
 - **Componentes de Dominio:** `TaskCard`, `TaskForm`, `KanbanBoard`, `ArticleCard`, `ArticleEditor`, `ArticleViewer`, `TicketCard`, `TicketForm`, `TicketStatusBadge`.
+- **UI/UX Global:** Implementado modo oscuro por defecto con paleta de colores neón personalizados y animaciones en toda la SPA.
 
 ### 3.3 Infraestructura & Despliegue
 - Creados los `Dockerfile` multi-stage para backend (Node Alpine) y frontend (Nginx Alpine SPA).
