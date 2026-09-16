@@ -66,6 +66,7 @@ export interface PublicUser {
   id: string;
   fullName: string;
   username: string;
+  email: string; // <-- AÑADIDO: Requerido por Pick<PublicUser, ... 'email'>
   role: Role;
   isActive: boolean;
   createdAt: string;
