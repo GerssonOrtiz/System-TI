@@ -3,7 +3,7 @@
 > **Proyecto:** Sistema de Gestión de TI (Mesa de Ayuda / Tareas Internas / Base de Conocimiento)  
 > **Arquitectura:** Monolito Modular desacoplado con Monorepo (Express API + Prisma + React/Vite + Zod + TanStack Query + Tailwind CSS)  
 > **Documento de Referencia Base:** `arquitectura-sistema-gestion-ti.md`  
-> **Fecha de Actualización:** 16 de Septiembre, 2026
+> **Fecha de Actualización:** 16 de Septiembre, 2026 (Actualizado con correcciones de autenticación, cliente HTTP e integración de tipos en frontend)
 
 ---
 
@@ -34,7 +34,7 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
 | **Formularios & Validación** | React Hook Form + Zod | Validación tipada compartida frontend/backend |
 | **Backend** | Node.js 20 LTS + Express + TypeScript | API REST tipada end-to-end |
 | **ORM & BD** | Prisma ORM + PostgreSQL 15+ | Modelado, migraciones y queries tipadas |
-| **Autenticación** | JWT (Access + Refresh token) + bcryptjs | Seguridad stateless por roles (`SOLICITANTE`, `ADMIN_TI`) |
+| **Autenticación** | JWT (Access + Refresh token) + bcryptjs | Seguridad stateless por roles (`SOLICITANTE`, `ADMIN_TI`) con campo identificador `username` |
 | **Paquete Compartido** | `@sistema-ti/shared` | DTOs, Zod Schemas y Constantes comunes |
 | **Documentación API** | Swagger UI (`/api/v1/docs`) | Contrato OpenAPI interactivo |
 | **Contenedores** | Docker + Docker Compose | Entorno reproducible (Postgres, Backend, Frontend) |
@@ -45,9 +45,10 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
 
 ### 3.1 Backend & Base de Datos (Completado 100%)
 - **Esquema de Datos (Prisma):** Tablas `users`, `tickets`, `ticket_comments`, `tasks`, `knowledge_articles` y `audit_logs` con índices y relaciones.
-- **Seed de Datos (`prisma/seed.ts`):** Creación de usuario Administrador y Solicitantes iniciales con hash de contraseñas bcrypt.
+- **Identificador de Usuario Unificado:** Corrección integral de `email` a `username` en todos los modelos, DTOs de `@sistema-ti/shared`, repositorios Prisma (`tickets`, `comments`, `tasks`) y middleware de autenticación (`req.user.username`).
+- **Seed de Datos (`prisma/seed.ts`):** Creación de usuario Administrador (`SEED_ADMIN_USERNAME`, `SEED_ADMIN_PASSWORD`) y Solicitantes iniciales con hash de contraseñas bcrypt.
 - **Módulos de la API REST:**
-  - `auth`: `/auth/login`, `/auth/refresh` con rotación JWT.
+  - `auth`: `/auth/login`, `/auth/refresh` con rotación JWT y validación Zod (`LoginSchema`, `RefreshTokenSchema`).
   - `users`: `/users/me`, `/users` (listado y creación), `/users/:id/password`, `/users/:id/status`.
   - `tickets`: CRUD de tickets, asignación de técnicos, cambio de estados y comentarios públicos/internos (`isInternal`).
   - `tasks`: CRUD de tareas internas y actualización de estados.
@@ -56,7 +57,12 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
   - `audit`: Servicio centralizado `audit.service.ts` invocado en cada cambio de estado.
 
 ### 3.2 Frontend SPA (Completado 100%)
-- **Enrutamiento y Seguridad:** Creados `AppRouter.tsx`, `ProtectedRoute` y `RoleRoute` separando vistas de Solicitante y Administrador.
+- **Enrutamiento y Seguridad:** `AppRouter.tsx`, `ProtectedRoute` y `RoleRoute` separando vistas de Solicitante y Administrador.
+- **Flujo de Autenticación & Conexión de API:**
+  - Inicialización activa de interceptores Axios (`initAxiosInterceptors`) en `App.tsx` enlazado con `authStore.ts`.
+  - `axiosClient.ts` configurado para resolver `baseURL` mediante `import.meta.env.VITE_API_URL` (para producción) con fallback a `/api/v1` (en desarrollo local con proxy Vite).
+  - Tipado de entorno Vite configurado en `src/vite-env.d.ts` y `tsconfig.json` (`types: ["vite/client"]`) para paso limpio de `tsc --noEmit`.
+  - `LoginPage.tsx` alineado con `LoginSchema` (`username` + `password`) y redirección a ruta canónica `/solicitante/tickets` o `/admin/dashboard`.
 - **Vistas del Solicitante:** `MisTicketsPage.tsx`, `NuevoTicketPage.tsx`, `TicketDetallePage.tsx` y `BaseConocimientoPage.tsx`.
 - **Vistas del Administrador TI:**
   - `DashboardPage.tsx`: Métricas de tickets abiertos, tareas pendientes y tarjetas por prioridad.
@@ -65,16 +71,27 @@ El **Sistema de Gestión de TI** es una plataforma integral diseñada para optim
   - `TableroTareasPage.tsx`: Kanban operativo organizado por columnas de estado.
   - `GestionArticulosPage.tsx`: Editor y publicación de guías en Markdown.
 - **Componentes de Dominio:** `TaskCard`, `TaskForm`, `KanbanBoard`, `ArticleCard`, `ArticleEditor`, `ArticleViewer`, `TicketCard`, `TicketForm`, `TicketStatusBadge`.
-- **UI/UX Global:** Implementado modo oscuro por defecto con paleta de colores neón personalizados y animaciones en toda la SPA.
+- **UI/UX Global:** Modo oscuro por defecto con paleta neón personalizada y animaciones.
 
 ### 3.3 Infraestructura & Despliegue
 - Creados los `Dockerfile` multi-stage para backend (Node Alpine) y frontend (Nginx Alpine SPA).
-- Creado `apps/frontend/vercel.json` para soporte de rutas SPA en Vercel.
+- `apps/frontend/vercel.json` para soporte de rutas SPA en Vercel.
+- `apps/frontend/vite.config.ts` configurado con proxy inteligente en `/api` extrayendo el `origin` sin duplicar `/api/v1`.
 - Definido `docker-compose.yml` para levantar PostgreSQL, API REST y Frontend localmente.
 
 ---
 
-## 4. Estrategia de Despliegue 100% GRATUITO ($0 / mes)
+## 4. Estado de Despliegues en Producción
+
+- **Backend API (Render.com):**
+  - URL Base: `https://system-ti-backend.onrender.com/api/v1`
+  - Swagger Docs: `https://system-ti-backend.onrender.com/api/v1/docs`
+- **Frontend SPA (Vercel):**
+  - URL Producción: `https://frontend-zq3g.vercel.app`
+
+---
+
+## 5. Estrategia de Despliegue 100% GRATUITO ($0 / mes)
 
 Para un uso simple con volumen bajo/medio sin ningún tipo de cobro, la combinación óptima es:
 
@@ -95,16 +112,18 @@ Para un uso simple con volumen bajo/medio sin ningún tipo de cobro, la combinac
      - `NODE_ENV`: `production`
      - `JWT_SECRET`: *(Tu clave secreta JWT)*
      - `JWT_REFRESH_SECRET`: *(Tu clave secreta Refresh JWT)*
-     - `FRONTEND_URL`: `https://tu-app-frontend.vercel.app`
-4. Render te asignará una URL pública gratuita (ej: `https://sistema-ti-backend.onrender.com`).
+     - `FRONTEND_URL`: `https://frontend-zq3g.vercel.app`
+     - `SEED_ADMIN_USERNAME`: `admin`
+     - `SEED_ADMIN_PASSWORD`: *(Contraseña inicial para el admin)*
+4. Render asigna la URL pública: `https://system-ti-backend.onrender.com`.
 
 ### Paso 3: Frontend SPA Gratuito en Vercel
 1. Regístrate gratis en **[Vercel.com](https://vercel.com)**.
 2. Haz clic en **Add New Project** y selecciona tu repositorio.
 3. Configuración:
    - **Root Directory:** `apps/frontend`
-   - **Build Command:** `npm run build`
+   - **Build Command:** `pnpm --filter @sistema-ti/shared build && tsc --noEmit && vite build` (o comando por defecto si se compila monorepo)
    - **Output Directory:** `dist`
-   - **Environment Variables:**
-     - `VITE_API_URL`: `https://sistema-ti-backend.onrender.com/api/v1`
-4. Despliega. Vercel te dará tu URL pública con HTTPS (ej: `https://sistema-ti.vercel.app`).
+   - **Environment Variables (Crítico):**
+     - `VITE_API_URL`: `https://system-ti-backend.onrender.com/api/v1`
+4. Despliega. Vercel asigna la URL pública con HTTPS (ej: `https://frontend-zq3g.vercel.app`).
