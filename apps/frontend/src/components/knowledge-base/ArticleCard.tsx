@@ -30,7 +30,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       </CardHeader>
       <CardContent className="space-y-3 pt-0">
         <p className="text-xs text-muted-foreground line-clamp-3">
-          {article.content.replace(/[#*`_~]/g, '').slice(0, 140)}...
+          {(article.content || '').replace(/[#*`_~]/g, '').slice(0, 140)}...
         </p>
 
         {article.tags.length > 0 && (

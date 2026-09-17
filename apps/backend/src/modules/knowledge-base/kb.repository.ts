@@ -19,6 +19,7 @@ const articleListSelect = {
   id: true,
   title: true,
   slug: true,
+  content: true,
   category: true,
   tags: true,
   isPublished: true,
