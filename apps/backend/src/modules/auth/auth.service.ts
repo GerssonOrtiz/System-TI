@@ -19,13 +19,13 @@ interface TokenPayload {
 }
 
 function signAccessToken(payload: Omit<TokenPayload, 'type'>): string {
-  return jwt.sign({ ...payload, type: 'access' }, env.JWT_SECRET, {
+  return jwt.sign({ ...payload, type: 'access' }, env.JWT_SECRET as string, {
     expiresIn: env.JWT_ACCESS_EXPIRES_IN,
   } as jwt.SignOptions);
 }
 
 function signRefreshToken(payload: Omit<TokenPayload, 'type'>): string {
-  return jwt.sign({ ...payload, type: 'refresh' }, env.JWT_REFRESH_SECRET, {
+  return jwt.sign({ ...payload, type: 'refresh' }, env.JWT_REFRESH_SECRET as string, {
     expiresIn: env.JWT_REFRESH_EXPIRES_IN,
   } as jwt.SignOptions);
 }
@@ -100,7 +100,7 @@ export const authService = {
   async refreshToken(token: string): Promise<{ accessToken: string }> {
     let payload: TokenPayload;
     try {
-      payload = jwt.verify(token, env.JWT_REFRESH_SECRET) as TokenPayload;
+      payload = jwt.verify(token, env.JWT_REFRESH_SECRET as string) as TokenPayload;
     } catch {
       throw ApiError.unauthorized('Refresh token inválido o expirado');
     }

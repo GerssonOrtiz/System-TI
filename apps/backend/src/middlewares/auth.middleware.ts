@@ -13,7 +13,7 @@ interface JwtPayload {
   type: 'access' | 'refresh';
 }
 
-/** Verifica el JWT de acceso y adjunta req.user con { id, role, email } */
+/** Verifica el JWT de acceso y adjunta req.user con { id, role, username } */
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
 
@@ -27,7 +27,7 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
   }
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    const payload = jwt.verify(token, env.JWT_SECRET as string) as JwtPayload;
 
     if (payload.type !== 'access') {
       throw ApiError.unauthorized('Tipo de token inválido');
@@ -35,7 +35,7 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
 
     req.user = {
       id: payload.sub,
-      email: payload.username,
+      username: payload.username,
       role: payload.role,
     };
 

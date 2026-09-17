@@ -48,7 +48,7 @@ export function LoginPage() {
       const { user: authUser, tokens } = response.data.data;
       setAuth(authUser, tokens.accessToken, tokens.refreshToken);
 
-      const redirectTo = authUser.role === Role.ADMIN_TI ? '/admin/dashboard' : '/tickets';
+      const redirectTo = authUser.role === Role.ADMIN_TI ? '/admin/dashboard' : '/solicitante/tickets';
       navigate(redirectTo, { replace: true });
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -79,13 +79,13 @@ export function LoginPage() {
 
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-            {/* Campo Email */}
+            {/* Campo Usuario */}
             <div className="space-y-2">
-              <Label htmlFor="username">Nombre de Usuario o ID</Label>
+              <Label htmlFor="username">Nombre de Usuario</Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="usuario@empresa.com"
+                placeholder="ej: admin, mgarcia"
                 autoComplete="username"
                 aria-describedby={errors.username ? 'username-error' : undefined}
                 aria-invalid={!!errors.username}

@@ -66,7 +66,6 @@ export interface PublicUser {
   id: string;
   fullName: string;
   username: string;
-  email: string; // <-- AÑADIDO: Requerido por Pick<PublicUser, ... 'email'>
   role: Role;
   isActive: boolean;
   createdAt: string;
@@ -91,9 +90,9 @@ export interface TicketDTO {
   priority: TicketPriority;
   category: TicketCategory;
   creatorId: string;
-  creator?: Pick<PublicUser, 'id' | 'fullName' | 'email'>;
+  creator?: Pick<PublicUser, 'id' | 'fullName' | 'username'>;
   assigneeId: string | null;
-  assignee?: Pick<PublicUser, 'id' | 'fullName' | 'email'> | null;
+  assignee?: Pick<PublicUser, 'id' | 'fullName' | 'username'> | null;
   resolvedAt: string | null;
   closedAt: string | null;
   createdAt: string;
@@ -104,7 +103,7 @@ export interface TicketCommentDTO {
   id: string;
   ticketId: string;
   authorId: string;
-  author?: Pick<PublicUser, 'id' | 'fullName' | 'email'>;
+  author?: Pick<PublicUser, 'id' | 'fullName' | 'username'>;
   content: string;
   isInternal: boolean;
   createdAt: string;
@@ -119,7 +118,7 @@ export interface TaskDTO {
   priority: TaskPriority;
   dueDate: string | null;
   creatorId: string;
-  creator?: Pick<PublicUser, 'id' | 'fullName' | 'email'>;
+  creator?: Pick<PublicUser, 'id' | 'fullName' | 'username'>;
   linkedTicketId: string | null;
   createdAt: string;
   updatedAt: string;

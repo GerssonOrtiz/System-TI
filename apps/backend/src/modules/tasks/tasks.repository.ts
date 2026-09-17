@@ -10,7 +10,7 @@ const taskWithRelations = {
   priority: true,
   dueDate: true,
   creatorId: true,
-  creator: { select: { id: true, fullName: true, email: true } },
+  creator: { select: { id: true, fullName: true, username: true } },
   linkedTicketId: true,
   createdAt: true,
   updatedAt: true,

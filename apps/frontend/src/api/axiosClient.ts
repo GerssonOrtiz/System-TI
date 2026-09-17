@@ -5,7 +5,13 @@ import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 // Justificación: accessToken en memoria (más seguro contra XSS), refreshToken en
 // localStorage para persistir sesión entre recargas. Trade-off documentado.
 
-const BASE_URL = ((import.meta as any).env?.['VITE_API_URL'] as string) ?? '/api/v1';
+// En desarrollo, usamos la URL relativa para que pase por el proxy de Vite y evitar CORS.
+// En producción (donde no hay proxy), usamos VITE_API_URL directamente.
+const BASE_URL =
+  (import.meta as any).env?.['PROD'] === true
+    ? ((import.meta as any).env?.['VITE_API_URL'] as string) ?? '/api/v1'
+    : '/api/v1';
+
 
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,

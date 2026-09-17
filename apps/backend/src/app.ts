@@ -18,7 +18,7 @@ export function createApp(): Express {
 
   // ─── CORS ─────────────────────────────────────────────────────────────────
   const allowedOrigins = [
-    env.FRONTEND_URL?.replace(/\/$/, ''), // Normaliza eliminando la barra final si existe
+    (env.FRONTEND_URL as string)?.replace(/\/$/, ''), // Normaliza eliminando la barra final si existe
     'https://frontend-zq3g.vercel.app',  // Dominio explícito en Vercel
   ].filter(Boolean) as string[];
 
