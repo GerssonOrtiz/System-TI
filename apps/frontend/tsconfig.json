@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@sistema-ti/shared": ["../../packages/shared/dist"]
-    }
+    },
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
