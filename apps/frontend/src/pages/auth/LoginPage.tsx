@@ -28,7 +28,7 @@ export function LoginPage() {
       if (from && from !== '/login') {
         navigate(from, { replace: true });
       } else {
-        navigate(user.role === Role.ADMIN_TI ? '/admin/dashboard' : '/tickets', { replace: true });
+        navigate(user.role === Role.ADMIN_TI ? '/admin/dashboard' : '/solicitante/tickets', { replace: true });
       }
     }
   }, [isAuthenticated, user, navigate, location.state]);

@@ -20,13 +20,15 @@ const queryClient = new QueryClient({
 
 // Componente interno que accede al store (debe estar dentro del árbol de React)
 function AppWithInterceptors() {
-  const { getAccessToken, setAccessToken, clearAuth } = useAuthStore();
+  const { getAccessToken, setAccessToken, clearAuth, initializeAuth } = useAuthStore();
 
   useEffect(() => {
     // Conecta el authStore con el cliente Axios para que el interceptor
     // de refresh pueda leer/escribir el accessToken en memoria.
     initAxiosInterceptors(getAccessToken, setAccessToken, clearAuth);
-  }, [getAccessToken, setAccessToken, clearAuth]);
+    // Restaura la sesión en recarga de página usando el refreshToken
+    void initializeAuth();
+  }, [getAccessToken, setAccessToken, clearAuth, initializeAuth]);
 
   return (
     <>
