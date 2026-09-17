@@ -5,12 +5,14 @@ import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 // Justificación: accessToken en memoria (más seguro contra XSS), refreshToken en
 // localStorage para persistir sesión entre recargas. Trade-off documentado.
 
-// En desarrollo, usamos la URL relativa para que pase por el proxy de Vite y evitar CORS.
-// En producción (donde no hay proxy), usamos VITE_API_URL directamente.
-const BASE_URL =
-  (import.meta as any).env?.['PROD'] === true
-    ? ((import.meta as any).env?.['VITE_API_URL'] as string) ?? '/api/v1'
-    : '/api/v1';
+// BASE_URL se resuelve en este orden de prioridad:
+//  1. VITE_API_URL (definida en Vercel o en .env local) → apunta al backend en Render.
+//  2. '/api/v1' como fallback → solo funciona en dev local via el proxy de Vite.
+// IMPORTANTE: en producción (Vercel) VITE_API_URL DEBE estar configurada como
+// variable de entorno en el panel de Vercel apuntando al backend en Render:
+//   https://system-ti-backend.onrender.com/api/v1
+const BASE_URL: string =
+  (import.meta.env['VITE_API_URL'] as string | undefined)?.trim() || '/api/v1';
 
 
 export const axiosClient: AxiosInstance = axios.create({
