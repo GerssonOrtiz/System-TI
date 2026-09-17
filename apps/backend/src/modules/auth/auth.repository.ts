@@ -6,7 +6,7 @@ import { prisma } from '../../config/database';
 const publicUserSelect = {
   id: true,
   fullName: true,
-  email: true,
+  username: true,
   role: true,
   isActive: true,
   createdAt: true,
