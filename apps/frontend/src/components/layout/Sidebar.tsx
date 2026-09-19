@@ -6,6 +6,7 @@ import {
   LogOut,
   Settings,
   Ticket,
+  Users,
 } from 'lucide-react';
 
 import { Role } from '@sistema-ti/shared';
@@ -44,6 +45,12 @@ const navItems: NavItem[] = [
     label: 'Artículos KB',
     href: '/admin/articulos',
     icon: <BookOpen className="h-4 w-4" aria-hidden="true" />,
+    roles: [Role.ADMIN_TI],
+  },
+  {
+    label: 'Usuarios y Accesos',
+    href: '/admin/usuarios',
+    icon: <Users className="h-4 w-4" aria-hidden="true" />,
     roles: [Role.ADMIN_TI],
   },
   // Solicitante

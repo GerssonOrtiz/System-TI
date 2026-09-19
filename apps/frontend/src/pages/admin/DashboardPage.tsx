@@ -1,4 +1,4 @@
-import { AlertCircle, CheckSquare, Clock, FileText, LifeBuoy } from 'lucide-react';
+import { AlertCircle, CheckSquare, Clock, FileText, LifeBuoy, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -155,6 +155,13 @@ export function DashboardPage() {
               <Link to="/admin/articulos">
                 <FileText className="h-4 w-4 text-primary" />
                 Gestión de Base de Conocimiento
+              </Link>
+            </Button>
+
+            <Button asChild variant="secondary" className="w-full justify-start gap-2">
+              <Link to="/admin/usuarios">
+                <Users className="h-4 w-4 text-primary" />
+                Usuarios y Accesos
               </Link>
             </Button>
           </CardContent>
