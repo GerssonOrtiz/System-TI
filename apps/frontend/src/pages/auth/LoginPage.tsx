@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Settings } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Settings } from 'lucide-react';
 import axios from 'axios';
 
 import { LoginSchema, Role } from '@sistema-ti/shared';
@@ -20,6 +20,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setAuth, isAuthenticated, user } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
 
   // Redirigir si ya está autenticado
   useEffect(() => {
@@ -65,15 +66,15 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100 p-4">
-      <Card className="w-full max-w-md shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-bg-base bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-bg-elevated via-bg-base to-black p-4">
+      <Card className="w-full max-w-md border-border/50 bg-bg-surface/90 shadow-2xl backdrop-blur-sm">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
-              <Settings className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+              <Settings className="h-6 w-6" aria-hidden="true" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Sistema de Gestión de TI</CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">Sistema de Gestión de TI</CardTitle>
           <CardDescription>Ingresa tus credenciales para continuar</CardDescription>
         </CardHeader>
 
@@ -85,7 +86,7 @@ export function LoginPage() {
               <Input
                 id="username"
                 type="text"
-                placeholder="ej: admin, mgarcia"
+                placeholder="ej: mgarcia, jperez"
                 autoComplete="username"
                 aria-describedby={errors.username ? 'username-error' : undefined}
                 aria-invalid={!!errors.username}
@@ -101,15 +102,31 @@ export function LoginPage() {
             {/* Campo Contraseña */}
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                aria-invalid={!!errors.password}
-                {...register('password')}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="pr-10"
+                  aria-describedby={errors.password ? 'password-error' : undefined}
+                  aria-invalid={!!errors.password}
+                  {...register('password')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p id="password-error" className="text-sm text-destructive" role="alert">
                   {errors.password.message as string}

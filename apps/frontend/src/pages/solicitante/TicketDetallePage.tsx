@@ -1,9 +1,16 @@
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, MessageSquare, User } from 'lucide-react';
+import { Loader2, MessageSquare, User, ArrowRightLeft } from 'lucide-react';
 
-import { CreateCommentSchema, TicketCategory, TicketPriority, TicketStatus } from '@sistema-ti/shared';
+import {
+  CreateCommentSchema,
+  Role,
+  TICKET_STATUS_TRANSITIONS,
+  TicketCategory,
+  TicketPriority,
+  TicketStatus,
+} from '@sistema-ti/shared';
 import type { CreateCommentInput } from '@sistema-ti/shared';
 
 import { Button } from '@/components/ui/button';
@@ -11,8 +18,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { TicketPriorityBadge, TicketStatusBadge } from '@/components/tickets/TicketStatusBadge';
-import { useTicket, useTicketComments, useAddComment } from '@/hooks/useTickets';
+import { useTicket, useTicketComments, useAddComment, useUpdateTicketStatus } from '@/hooks/useTickets';
+import { useAuthStore } from '@/store/authStore';
 import { formatDateTime } from '@/lib/utils';
 
 const categoryLabels: Record<TicketCategory, string> = {
@@ -23,11 +38,23 @@ const categoryLabels: Record<TicketCategory, string> = {
   [TicketCategory.OTRO]: 'Otro',
 };
 
+const statusLabels: Record<TicketStatus, string> = {
+  [TicketStatus.ABIERTO]: 'Abierto',
+  [TicketStatus.EN_PROGRESO]: 'En progreso',
+  [TicketStatus.EN_ESPERA]: 'En espera',
+  [TicketStatus.RESUELTO]: 'Resuelto',
+  [TicketStatus.CERRADO]: 'Cerrado',
+};
+
 export function TicketDetallePage() {
   const { id = '' } = useParams<{ id: string }>();
+  const { user } = useAuthStore();
   const { data: ticketData, isLoading: loadingTicket } = useTicket(id);
   const { data: commentsData, isLoading: loadingComments } = useTicketComments(id);
   const { mutateAsync: addComment, isPending: sendingComment } = useAddComment(id);
+  const { mutate: updateStatus, isPending: updatingStatus } = useUpdateTicketStatus(id);
+
+  const isAdmin = user?.role === Role.ADMIN_TI;
 
   const {
     register,
@@ -68,15 +95,65 @@ export function TicketDetallePage() {
       {/* Encabezado del ticket */}
       <Card>
         <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <h2 className="text-xl font-semibold">{ticket.title}</h2>
-            <TicketStatusBadge status={ticket.status as TicketStatus} />
-          </div>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <TicketPriorityBadge priority={ticket.priority as TicketPriority} />
-            <span className="text-sm text-muted-foreground">
-              {categoryLabels[ticket.category as TicketCategory]}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">{ticket.title}</h2>
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <TicketPriorityBadge priority={ticket.priority as TicketPriority} />
+                <span className="text-sm text-muted-foreground">
+                  {categoryLabels[ticket.category as TicketCategory]}
+                </span>
+              </div>
+            </div>
+
+            {/* Selector de Estado para Administrador o Badge para Solicitante */}
+            <div className="flex items-center gap-3">
+              {isAdmin ? (
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <span className="text-xs font-medium text-muted-foreground block">
+                      Estado actual:
+                    </span>
+                    <TicketStatusBadge status={ticket.status as TicketStatus} />
+                  </div>
+
+                  {(() => {
+                    const allowed = TICKET_STATUS_TRANSITIONS[ticket.status as TicketStatus] ?? [];
+                    if (allowed.length === 0) {
+                      return (
+                        <span className="text-xs text-muted-foreground italic ml-2">
+                          (Estado finalizado)
+                        </span>
+                      );
+                    }
+                    return (
+                      <div className="flex items-center gap-1.5 ml-2">
+                        <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
+                        <Select
+                          disabled={updatingStatus}
+                          onValueChange={(newStatus) =>
+                            updateStatus({ status: newStatus as TicketStatus })
+                          }
+                        >
+                          <SelectTrigger className="h-9 w-40 text-xs">
+                            <SelectValue placeholder="Cambiar a..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {allowed.map((st) => (
+                              <SelectItem key={st} value={st}>
+                                {statusLabels[st]}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    );
+                  })()}
+                </div>
+              ) : (
+                <TicketStatusBadge status={ticket.status as TicketStatus} />
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
